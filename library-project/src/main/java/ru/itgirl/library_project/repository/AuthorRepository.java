@@ -13,7 +13,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long>, JpaSpecif
 
     Optional<Author> getAuthorByName(String name);
 
-    @Query("Select name, surname, books from Author where name = ?")
+    @Query("Select name, surname, books from Author where name = :name")
     Author getAuthorByNameSql(String name);
 
 }

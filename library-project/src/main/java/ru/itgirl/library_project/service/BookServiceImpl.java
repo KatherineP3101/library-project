@@ -53,7 +53,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public String deleteBook(Long id) {
 
-        Book book = bookRepository.getById(id);
+        Book book = bookRepository.getReferenceById(id);
         try {
             bookRepository.delete(book);
             return "Book with id " + id + "has been deleted.";

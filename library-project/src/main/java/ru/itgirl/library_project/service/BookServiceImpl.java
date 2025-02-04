@@ -3,6 +3,7 @@ package ru.itgirl.library_project.service;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.itgirl.library_project.dto.AuthorDto;
 import ru.itgirl.library_project.dto.BookDto;
 import ru.itgirl.library_project.model.Author;
 import ru.itgirl.library_project.model.Book;
@@ -11,6 +12,8 @@ import ru.itgirl.library_project.repository.AuthorRepository;
 import ru.itgirl.library_project.repository.BookRepository;
 import ru.itgirl.library_project.repository.GenreRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,7 +40,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book updateBook(BookDto bookDto) {
-        Book book = bookRepository.getById(bookDto.getId());
+        Book book = bookRepository.getReferenceById(bookDto.getId());
 
         book.setName(StringUtils.isNotEmpty(bookDto.getName()) ? bookDto.getName() : book.getName());
         if (StringUtils.isNotEmpty(bookDto.getGenre())) {
@@ -66,11 +69,33 @@ public class BookServiceImpl implements BookService {
 
         return BookDto.builder()
                 .id(book.getId())
-                .authors(book.getAuthors().stream().toList())
+                .authors(convertAuthorListToDto(book.getAuthors()))
                 .name(book.getName())
                 .genre(book.getGenre().toString())
                 .build();
 
+    }
+
+    private List<AuthorDto> convertAuthorListToDto(Set<Author> authorSet) {
+        List<AuthorDto> authorDtoList = new ArrayList<>();
+        for (Author author : authorSet) {
+            List<BookDto> bookDtoList = author.getBooks()
+                    .stream()
+                    .map(book -> BookDto.builder()
+                            .genre(book.getGenre().getName())
+                            .name(book.getName())
+                            .id(book.getId())
+                            .build()
+                    ).toList();
+            AuthorDto authorDto = AuthorDto.builder()
+                    .books(bookDtoList)
+                    .id(author.getId())
+                    .name(author.getName())
+                    .surname(author.getSurname())
+                    .build();
+            authorDtoList.add(authorDto);
+        }
+        return authorDtoList;
     }
 
 }

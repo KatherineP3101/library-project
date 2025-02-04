@@ -15,5 +15,5 @@ public class GenreDto {
     private Long id;
     private String name;
 
-    private List<BookDto> books;
+    //private List<BookDto> books;
 }

@@ -23,4 +23,5 @@ public class Genre {
 
     @OneToMany (mappedBy = "genre")
     private Set<Book> books;
+
 }

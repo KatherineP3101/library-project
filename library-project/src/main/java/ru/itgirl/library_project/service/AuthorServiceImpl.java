@@ -1,11 +1,14 @@
 package ru.itgirl.library_project.service;
 
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.itgirl.library_project.dto.AuthorDto;
 import ru.itgirl.library_project.dto.BookDto;
 import ru.itgirl.library_project.model.Author;
 import ru.itgirl.library_project.repository.AuthorRepository;
+import ru.itgirl.library_project.specifications.AuthorSpecification;
 
 import java.util.List;
 
@@ -19,6 +22,29 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorDto getAuthorById(Long id) {
         Author author = authorRepository.findById(id).orElseThrow();
         return convertToDto(author);
+    }
+
+    @Override
+    public AuthorDto getAuthorByNameV1(String name) {
+        Author author = authorRepository.getAuthorByName(name).orElseThrow();
+        return convertToDto(author);
+    }
+
+    @Override
+    public AuthorDto getAuthorByNameV2(String name) {
+        Author author = authorRepository.getAuthorByNameSql(name);
+        return convertToDto(author);
+    }
+
+    @Override
+    public List<AuthorDto> getAuthorByNameV3(String name) {
+
+        Specification specification = Specification.where(null);
+        if (StringUtils.isNotEmpty(name)) {
+            specification = specification.and(AuthorSpecification.hasName(name));
+        }
+
+        return authorRepository.findAll(specification);
     }
 
     private AuthorDto convertToDto(Author author) {

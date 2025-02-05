@@ -45,16 +45,7 @@ public class GenreServiceImpl implements GenreService {
     private List<AuthorDto> convertAuthorListToDto(Set<Author> authorSet) {
         List<AuthorDto> authorDtoList = new ArrayList<>();
         for (Author author : authorSet) {
-            List<BookDto> bookDtoList = author.getBooks()
-                    .stream()
-                    .map(book -> BookDto.builder()
-                            .genre(book.getGenre().getName())
-                            .name(book.getName())
-                            .id(book.getId())
-                            .build()
-                    ).toList();
             AuthorDto authorDto = AuthorDto.builder()
-                    .books(bookDtoList)
                     .id(author.getId())
                     .name(author.getName())
                     .surname(author.getSurname())

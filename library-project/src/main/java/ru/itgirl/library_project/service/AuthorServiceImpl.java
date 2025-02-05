@@ -2,6 +2,7 @@ package ru.itgirl.library_project.service;
 
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.itgirl.library_project.dto.AuthorDto;
@@ -11,6 +12,7 @@ import ru.itgirl.library_project.repository.AuthorRepository;
 import ru.itgirl.library_project.specifications.AuthorSpecification;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,14 +39,24 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<AuthorDto> getAuthorByNameV3(String name) {
+    public List<AuthorDto> getAuthorByNameOrSurname(String name, String surname) {
 
         Specification specification = Specification.where(null);
         if (StringUtils.isNotEmpty(name)) {
             specification = specification.and(AuthorSpecification.hasName(name));
         }
+        if (StringUtils.isNotEmpty(name)) {
+            specification = specification.and(AuthorSpecification.hasSurname(surname));
+        }
 
         return authorRepository.findAll(specification);
+    }
+
+    @Override
+    public List<AuthorDto> getAllAuthors() {
+        List<Author> authors = authorRepository.findAll();
+        List<AuthorDto> authorsDtoList = authors.stream().map(this::convertToDto).collect(Collectors.toList());
+        return authorsDtoList;
     }
 
     private AuthorDto convertToDto(Author author) {

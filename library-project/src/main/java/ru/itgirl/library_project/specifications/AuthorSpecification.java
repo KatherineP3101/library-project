@@ -12,4 +12,12 @@ public class AuthorSpecification {
 
         return specification;
     }
+
+    public static Specification hasSurname(String surname) {
+        Specification<Author> specification = ((root, query, criteriaBuilder) -> {
+            return criteriaBuilder.equal(root.get(surname), surname);
+        });
+
+        return specification;
+    }
 }

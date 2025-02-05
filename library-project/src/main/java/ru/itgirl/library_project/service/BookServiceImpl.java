@@ -2,6 +2,8 @@ package ru.itgirl.library_project.service;
 
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import ru.itgirl.library_project.dto.AuthorDto;
 import ru.itgirl.library_project.dto.BookDto;
@@ -63,6 +65,13 @@ public class BookServiceImpl implements BookService {
         } catch (Exception e) {
             return "Book with id " + id + "couldn't be deleted.";
         }
+    }
+
+    @Override
+    public List<BookDto> findAllBooks() {
+        List<Book> books = bookRepository.findAll();
+        List<BookDto> bookDtoList = books.stream().map(this::convertToDto).collect(Collectors.toList());
+        return bookDtoList;
     }
 
     private BookDto convertToDto (Book book) {

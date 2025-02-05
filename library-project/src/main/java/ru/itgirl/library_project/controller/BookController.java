@@ -2,6 +2,8 @@ package ru.itgirl.library_project.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.itgirl.library_project.dto.BookDto;
 import ru.itgirl.library_project.model.Author;
@@ -12,6 +14,7 @@ import ru.itgirl.library_project.service.BookService;
 
 import java.util.Set;
 
+@Controller
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/book")
@@ -32,5 +35,11 @@ public class BookController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBook(@PathVariable Long id) {
         return ResponseEntity.ok().body(bookService.deleteBook(id));
+    }
+
+    @GetMapping("/books")
+    public String getAllBooksView(Model model) {
+        model.addAttribute("books", bookService.findAllBooks());
+        return "index";
     }
 }

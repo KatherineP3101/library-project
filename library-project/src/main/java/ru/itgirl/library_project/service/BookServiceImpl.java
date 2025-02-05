@@ -69,7 +69,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDto> findAllBooks() {
-        List<Book> books = bookRepository.findAll();
+        List<Book> books = bookRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
         List<BookDto> bookDtoList = books.stream().map(this::convertToDto).collect(Collectors.toList());
         return bookDtoList;
     }

@@ -54,7 +54,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<AuthorDto> getAllAuthors() {
-        List<Author> authors = authorRepository.findAll();
+        List<Author> authors = authorRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
         List<AuthorDto> authorsDtoList = authors.stream().map(this::convertToDto).collect(Collectors.toList());
         return authorsDtoList;
     }

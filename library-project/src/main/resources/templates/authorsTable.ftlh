@@ -23,8 +23,8 @@
           <td><span>${author.name}</span></td>
           <td><span>${author.books}</span></td>
         </tr>
-      </tbody>
       </#list>
+      </tbody>
     </table>
   </div>
 </div>

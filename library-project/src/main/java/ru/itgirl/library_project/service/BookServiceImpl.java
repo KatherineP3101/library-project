@@ -30,15 +30,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book createNewBook(BookDto bookDto) {
-        Genre genre = (Genre) genreRepository.findAll().stream()
-                .map(genr -> Genre.builder()
-                        .name(bookDto.getGenre())
-                        .build());
+        Genre genre = genreRepository.findByName(bookDto.getGenre())
+                .orElseThrow(() -> new RuntimeException("Genre not found"));
         Set<Author> authors = bookDto.getAuthors().stream()
-                .map(auth -> Author.builder()
-                        .name(auth.getName())
-                        .surname(auth.getSurname())
-                        .build())
+                .map(auth ->  Author.builder()
+                                .name(auth.getName())
+                                .surname(auth.getSurname())
+                                .build())
                 .collect(Collectors.toSet());
         Book book = new Book();
         book.setName(bookDto.getName());

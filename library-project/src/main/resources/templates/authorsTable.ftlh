@@ -17,13 +17,13 @@
         </tr>
       </thead>
       <tbody>
-      <#list authors as author>
-        <tr>
-          <td><span>${author.id}</span></td>
-          <td><span>${author.name}</span></td>
-          <td><span>${author.books}</span></td>
-        </tr>
-      </#list>
+        <#list authors as author>
+          <tr>
+            <td><span>${author.id}</span></td>
+            <td><span>${author.name}</span></td>
+            <td><span>${author.books}</span></td>
+          </tr>
+        </#list>
       </tbody>
     </table>
   </div>

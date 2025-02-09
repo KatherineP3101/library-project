@@ -1,5 +1,6 @@
 package ru.itgirl.library_project.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,11 +14,11 @@ import java.util.List;
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BookDto {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class UserDto {
     private Long id;
-    private String name;
-    private String genre;
-
-    private List<AuthorDto> authors;
-    private List<UserDto> users;
+    private String username;
+    private String email;
+    private List<BookDto> books;
+    private String role;
 }

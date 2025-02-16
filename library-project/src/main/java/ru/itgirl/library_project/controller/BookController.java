@@ -1,5 +1,7 @@
 package ru.itgirl.library_project.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +20,13 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/book")
+@Tag(name = "Books", description = "Books management")
 public class BookController {
 
     private final BookService bookService;
 
     @PostMapping("")
+    @Operation(summary = "Create a new book", description = "This method allows to add a new book to the database.")
     public ResponseEntity<?> createNewBook(@Valid @RequestBody BookDto bookDto, BindingResult result) {
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
@@ -37,6 +41,7 @@ public class BookController {
     }
 
     @PutMapping("")
+    @Operation(summary = "Update book", description = "This method allows to update any book in the database.")
     public ResponseEntity<?> updateBook(@Valid @RequestBody BookDto bookDto, BindingResult result) {
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
@@ -51,11 +56,15 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete book by id", description = "This method allows to delete the book with " +
+            "the id provided from the database.")
     public ResponseEntity<?> deleteBook(@PathVariable Long id) {
         return ResponseEntity.ok().body(bookService.deleteBook(id));
     }
 
     @GetMapping("/books")
+    @Operation(summary = "Table with all books in browser.", description = "This method allows to display all the books" +
+            "as a styled table in a browser.")
     public String getAllBooksView(Model model) {
         model.addAttribute("books", bookService.findAllBooks());
         return "index";

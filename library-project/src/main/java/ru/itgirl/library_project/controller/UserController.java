@@ -1,5 +1,7 @@
 package ru.itgirl.library_project.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +20,13 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
+@Tag(name = "Users", description = "Users management")
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping()
+    @Operation(summary = "Create a new user", description = "This method allows to add a new user to the database.")
     public ResponseEntity<?> addNewUser(@Valid @RequestBody User user, BindingResult result) {
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
@@ -37,6 +41,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get the list of user's books", description = "This method allows to get the books from " +
+            "the user with the indicated id number.")
     public List<Book> getUserBooks(@PathVariable("id") Long id){
         return userService.getUserBooks(id);
     }

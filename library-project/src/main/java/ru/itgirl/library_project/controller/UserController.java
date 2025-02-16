@@ -1,5 +1,6 @@
 package ru.itgirl.library_project.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.itgirl.library_project.dto.UserDto;

@@ -2,6 +2,7 @@ package ru.itgirl.library_project.service;
 
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
@@ -22,16 +23,20 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final GenreRepository genreRepository;
-    private final AuthorRepository authorRepository;
 
     @Override
     public Book createNewBook(BookDto bookDto) {
+        log.info("Creating new book: {}", bookDto.getName());
         Genre genre = genreRepository.findByName(bookDto.getGenre())
-                .orElseThrow(() -> new RuntimeException("Genre not found"));
+                .orElseThrow(() -> {
+                    log.warn("Genre not found: {}", bookDto.getGenre());
+                    return new RuntimeException("Genre not found");
+                });
         Set<Author> authors = bookDto.getAuthors().stream()
                 .map(auth ->  Author.builder()
                                 .name(auth.getName())
@@ -43,11 +48,13 @@ public class BookServiceImpl implements BookService {
         book.setGenre(genre);
         book.setAuthors(authors);
 
+        log.info("Book created successfully");
         return bookRepository.save(book);
     }
 
     @Override
     public Book updateBook(BookDto bookDto) {
+        log.info("Updating book: {}", bookDto.getName());
         Book book = bookRepository.getReferenceById(bookDto.getId());
 
         book.setName(StringUtils.isNotEmpty(bookDto.getName()) ? bookDto.getName() : book.getName());
@@ -58,40 +65,48 @@ public class BookServiceImpl implements BookService {
                             .build()));
         }
 
+        log.info("Book updated successfully");
         return bookRepository.save(book);
     }
 
     @Override
     public String deleteBook(Long id) {
-
+        log.info("Deleting book with id: {}", id);
         Book book = bookRepository.getReferenceById(id);
         try {
             bookRepository.delete(book);
+            log.info("Book with ID {} has been successfully deleted.", id);
             return "Book with id " + id + "has been deleted.";
         } catch (Exception e) {
+            log.error("Couldn't delete book with ID: {}", id, e);
             return "Book with id " + id + "couldn't be deleted.";
         }
     }
 
     @Override
     public List<BookDto> findAllBooks() {
+        log.info("Fetching all books sorted by id");
         List<Book> books = bookRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+        log.info("Total books found: {}", books.size());
+
         List<BookDto> bookDtoList = books.stream().map(this::convertToDto).collect(Collectors.toList());
         return bookDtoList;
     }
 
     private BookDto convertToDto (Book book) {
+        log.debug("Converting Book entity to DTO: {}", book.getName());
 
         return BookDto.builder()
                 .id(book.getId())
                 .authors(convertAuthorListToDto(book.getAuthors()))
                 .name(book.getName())
-                .genre(book.getGenre().toString())
+                .genre(book.getGenre().getName())
                 .build();
 
     }
 
     private List<AuthorDto> convertAuthorListToDto(Set<Author> authorSet) {
+        log.debug("Converting {} authors to DTO", authorSet.size());
         List<AuthorDto> authorDtoList = new ArrayList<>();
         for (Author author : authorSet) {
             AuthorDto authorDto = AuthorDto.builder()

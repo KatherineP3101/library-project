@@ -6,5 +6,7 @@
                 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
     <include file="changelog/2024_12_31.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/create_table_user.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/alter_table_user_add_column_password_role.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

@@ -29,13 +29,19 @@ public class BookServiceImpl implements BookService {
     private final AuthorRepository authorRepository;
 
     @Override
-    public Book createNewBook(String name, Long genreId, Long authorId) {
-        Genre genre = genreRepository.getReferenceById(genreId);
-        Set<Author> author = authorRepository.findById(authorId).stream().collect(Collectors.toSet());
+    public Book createNewBook(BookDto bookDto) {
+        Genre genre = genreRepository.findByName(bookDto.getGenre())
+                .orElseThrow(() -> new RuntimeException("Genre not found"));
+        Set<Author> authors = bookDto.getAuthors().stream()
+                .map(auth ->  Author.builder()
+                                .name(auth.getName())
+                                .surname(auth.getSurname())
+                                .build())
+                .collect(Collectors.toSet());
         Book book = new Book();
-        book.setName(name);
+        book.setName(bookDto.getName());
         book.setGenre(genre);
-        book.setAuthors(author);
+        book.setAuthors(authors);
 
         return bookRepository.save(book);
     }

@@ -23,8 +23,8 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping("")
-    public Book createNewBook(String name, Long genreId, Long authorId) {
-        return bookService.createNewBook(name, genreId, authorId);
+    public Book createNewBook(@RequestBody BookDto bookDto) {
+        return bookService.createNewBook(bookDto);
     }
 
     @PutMapping("")

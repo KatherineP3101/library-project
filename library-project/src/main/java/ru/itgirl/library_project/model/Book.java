@@ -23,6 +23,9 @@ public class Book {
     @JoinColumn(name = "genre_id")
     private Genre genre;
 
+    @ManyToMany(mappedBy = "books")
+    private Set<User> users;
+
     @ManyToMany
     @JoinTable(
             name = "author_book",

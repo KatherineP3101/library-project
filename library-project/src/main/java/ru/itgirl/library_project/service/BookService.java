@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface BookService {
 
-    Book createNewBook(String name, Long genreId, Long authorId);
+    Book createNewBook(BookDto bookDto);
 
     Book updateBook(BookDto bookDto);
 

@@ -12,12 +12,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/author")
+@RequestMapping("/authors")
 public class AuthorController {
 
     private final AuthorService authorService;
 
-    @GetMapping()
+    @GetMapping("")
     public String getAllAuthors(@RequestParam(required = false) String name,
                                 @RequestParam(required = false) String surname,
                                 Model model) {
@@ -25,7 +25,7 @@ public class AuthorController {
             return authorService.getAuthorByNameOrSurname(name, surname).toString();
         } else {
             List<AuthorDto> authors = authorService.getAllAuthors();
-            model.addAttribute("Authors", authors);
+            model.addAttribute("authors", authors);
             return "authorsTable";
         }
     }

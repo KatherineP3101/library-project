@@ -17,7 +17,7 @@ import java.util.Set;
 @Controller
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/book")
+@RequestMapping("/books")
 public class BookController {
 
     private final BookService bookService;
@@ -37,7 +37,7 @@ public class BookController {
         return ResponseEntity.ok().body(bookService.deleteBook(id));
     }
 
-    @GetMapping("/books")
+    @GetMapping("")
     public String getAllBooksView(Model model) {
         model.addAttribute("books", bookService.findAllBooks());
         return "index";

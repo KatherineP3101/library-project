@@ -4,7 +4,6 @@ import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import ru.itgirl.library_project.dto.AuthorDto;
 import ru.itgirl.library_project.dto.BookDto;
@@ -28,9 +27,10 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final GenreRepository genreRepository;
+    private final AuthorRepository authorRepository;
 
     @Override
-    public Book createNewBook(BookDto bookDto) {
+    public BookDto createNewBook(BookDto bookDto) {
         log.info("Creating new book: {}", bookDto.getName());
         Genre genre = genreRepository.findByName(bookDto.getGenre())
                 .orElseThrow(() -> {
@@ -38,10 +38,7 @@ public class BookServiceImpl implements BookService {
                     return new RuntimeException("Genre not found");
                 });
         Set<Author> authors = bookDto.getAuthors().stream()
-                .map(auth ->  Author.builder()
-                                .name(auth.getName())
-                                .surname(auth.getSurname())
-                                .build())
+                .map(auth ->  authorRepository.getAuthorByName(auth.getName()).orElseThrow())
                 .collect(Collectors.toSet());
         Book book = new Book();
         book.setName(bookDto.getName());
@@ -49,7 +46,8 @@ public class BookServiceImpl implements BookService {
         book.setAuthors(authors);
 
         log.info("Book created successfully");
-        return bookRepository.save(book);
+        bookRepository.save(book);
+        return convertToDto(book);
     }
 
     @Override

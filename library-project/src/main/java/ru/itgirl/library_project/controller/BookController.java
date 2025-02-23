@@ -19,7 +19,7 @@ import java.util.Map;
 @Controller
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/book")
+@RequestMapping("/books")
 @Tag(name = "Books", description = "Books management")
 public class BookController {
 
@@ -62,7 +62,7 @@ public class BookController {
         return ResponseEntity.ok().body(bookService.deleteBook(id));
     }
 
-    @GetMapping("/books")
+    @GetMapping("")
     @Operation(summary = "Table with all books in browser.", description = "This method allows to display all the books" +
             "as a styled table in a browser.")
     public String getAllBooksView(Model model) {

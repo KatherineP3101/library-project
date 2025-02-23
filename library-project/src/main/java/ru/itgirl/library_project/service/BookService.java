@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface BookService {
 
-    Book createNewBook(BookDto bookDto);
+    BookDto createNewBook(BookDto bookDto);
 
     Book updateBook(BookDto bookDto);
 

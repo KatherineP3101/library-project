@@ -1,6 +1,8 @@
 package ru.itgirl.library_project.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import ru.itgirl.library_project.security.Role;
 
@@ -27,6 +29,8 @@ public class User {
     private String email;
 
     @Column(name = "password")
+    @NotBlank
+    @Size(min = 8, message = "Password must be at least 8 characters long.")
     private String password;
 
     @Enumerated(EnumType.STRING)

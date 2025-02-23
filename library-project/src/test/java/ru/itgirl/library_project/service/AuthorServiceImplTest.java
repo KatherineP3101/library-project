@@ -34,7 +34,7 @@ class AuthorServiceImplTest {
     void setUp() {
         Set<Book> books = new HashSet<>();
         List<BookDto> booksList = new ArrayList<>();
-        author = new Author(12L, "Жюль", "Верн", books);
+        author = new Author(12L, "Жюль1", "Верн", books);
     }
 
     @Test
@@ -55,9 +55,9 @@ class AuthorServiceImplTest {
 
     @Test
     void getAuthorByNameV1_Success() {
-        Mockito.when(authorRepository.getAuthorByName("Жюль")).thenReturn(Optional.of(author));
+        Mockito.when(authorRepository.getAuthorByName("Жюль1")).thenReturn(Optional.of(author));
 
-        AuthorDto authorResult = authorService.getAuthorByNameV1("Жюль");
+        AuthorDto authorResult = authorService.getAuthorByNameV1("Жюль1");
         assertNotNull(authorResult);
         assertEquals("Жюль", authorResult.getName());
         assertEquals("Верн", authorResult.getSurname());

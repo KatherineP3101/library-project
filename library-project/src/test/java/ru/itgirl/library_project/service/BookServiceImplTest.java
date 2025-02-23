@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
+import ru.itgirl.library_project.dto.AuthorDto;
 import ru.itgirl.library_project.dto.BookDto;
 import ru.itgirl.library_project.model.Author;
 import ru.itgirl.library_project.model.Book;
@@ -17,10 +18,7 @@ import ru.itgirl.library_project.repository.AuthorRepository;
 import ru.itgirl.library_project.repository.BookRepository;
 import ru.itgirl.library_project.repository.GenreRepository;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +35,7 @@ class BookServiceImplTest {
     private AuthorRepository authorRepository;
 
     @InjectMocks
-    private BookService bookService;
+    private BookServiceImpl bookServiceImpl;
 
     private Book book;
     private BookDto bookDto;
@@ -55,15 +53,24 @@ class BookServiceImplTest {
         authors = new HashSet<>();
         authors.add(author);
 
+        List<BookDto> booksList = new ArrayList<>();
+        AuthorDto authorDto = new AuthorDto(1L, "Айзек", "Азимов", booksList);
+        List<AuthorDto> authorsList  = new ArrayList<>();
+        authorsList.add(authorDto);
+
         User user = new User();
         users = new HashSet<>();
         users.add(user);
 
-        book = new Book(1L, "Академия", genre, users, authors);
+        book = new Book(1L, "Академия2", genre, users, authors);
         bookDto = new BookDto();
         bookDto.setId(book.getId());
         bookDto.setName(book.getName());
         bookDto.setGenre(book.getGenre().getName());
+        bookDto.setAuthors(authorsList);
+
+        books.add(book);
+        booksList.add(bookDto);
     }
 
     @Test
@@ -72,7 +79,7 @@ class BookServiceImplTest {
         Mockito.when(authorRepository.getAuthorByName("Айзек")).thenReturn(Optional.of(authors.iterator().next()));
         Mockito.when(bookRepository.save(Mockito.any(Book.class))).thenReturn(book);
 
-        BookDto result = bookService.createNewBook(bookDto);
+        BookDto result = bookServiceImpl.createNewBook(bookDto);
 
         assertNotNull(result);
         assertEquals("Академия", result.getName());
@@ -83,7 +90,7 @@ class BookServiceImplTest {
     void createNewBook_unSuccess_GenreNotFound() {
         Mockito.when(genreRepository.findByName("Научная фантастика")).thenThrow(RuntimeException.class);
 
-        assertThrows(RuntimeException.class, () -> bookService.createNewBook(bookDto));
+        assertThrows(RuntimeException.class, () -> bookServiceImpl.createNewBook(bookDto));
     }
 
     @Test
@@ -91,7 +98,7 @@ class BookServiceImplTest {
         Mockito.when(bookRepository.getReferenceById(1L)).thenReturn(book);
         Mockito.when(bookRepository.save(Mockito.any(Book.class))).thenReturn(book);
 
-        Book result = bookService.updateBook(bookDto);
+        Book result = bookServiceImpl.updateBook(bookDto);
 
         assertNotNull(result);
         assertEquals("Академия", result.getName());
@@ -102,7 +109,7 @@ class BookServiceImplTest {
         Mockito.when(bookRepository.getReferenceById(1L)).thenReturn(book);
         Mockito.doNothing().when(bookRepository).delete(book);
 
-        String result = bookService.deleteBook(1L);
+        String result = bookServiceImpl.deleteBook(1L);
 
         assertEquals("Book with id 1 has been deleted.", result);
     }
@@ -112,7 +119,7 @@ class BookServiceImplTest {
         Mockito.when(bookRepository.getReferenceById(1L)).thenReturn(book);
         Mockito.doThrow(new RuntimeException()).when(bookRepository).delete(book);
 
-        String result = bookService.deleteBook(1L);
+        String result = bookServiceImpl.deleteBook(1L);
 
         assertEquals("Book with id 1 couldn't be deleted.", result);
     }
@@ -121,7 +128,7 @@ class BookServiceImplTest {
     void findAllBooks_Success() {
         Mockito.when(bookRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))).thenReturn(List.of(book));
 
-        List<BookDto> result = bookService.findAllBooks();
+        List<BookDto> result = bookServiceImpl.findAllBooks();
 
         assertNotNull(result);
         assertEquals(1, result.size());

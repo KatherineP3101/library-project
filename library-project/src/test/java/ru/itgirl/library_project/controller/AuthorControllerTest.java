@@ -48,36 +48,36 @@ class AuthorControllerTest {
                         .with(httpBasic("admin@email.com", "11111")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("John"))
-                .andExpect(jsonPath("$.surname").value("Doe"));
+                .andExpect(jsonPath("$.name").value("Жюль"))
+                .andExpect(jsonPath("$.surname").value("Верн"));
     }
 
     @SneakyThrows
     @Test
     void getAuthorByName() {
-        mockMvc.perform(MockMvcRequestBuilders.get("/authors/name").param("name", "John")
+        mockMvc.perform(MockMvcRequestBuilders.get("/authors/name").param("name", "Жюль")
                         .with(httpBasic("admin@email.com", "11111")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("John"));
+                .andExpect(jsonPath("$.name").value("Жюль"));
     }
 
     @SneakyThrows
     @Test
     void getAuthorByNameSql() {
-        mockMvc.perform(MockMvcRequestBuilders.get("/authors/name/sql").param("name", "John")
+        mockMvc.perform(MockMvcRequestBuilders.get("/authors/name/sql").param("name", "Жюль")
                         .with(httpBasic("admin@email.com", "11111")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("John"));
+                .andExpect(jsonPath("$.name").value("Жюль"));
     }
 
     @SneakyThrows
     @Test
     void getAuthorByNameSpec() {
         mockMvc.perform(MockMvcRequestBuilders.get("/authors/name/spec")
-                        .param("name", "John").param("surname", "Doe")
+                        .param("name", "Жюль").param("surname", "Верн")
                         .with(httpBasic("admin@email.com", "11111")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("John"))
-                .andExpect(jsonPath("$[0].surname").value("Doe"));
+                .andExpect(jsonPath("$[0].name").value("Жюль"))
+                .andExpect(jsonPath("$[0].surname").value("Верн"));
     }
 }

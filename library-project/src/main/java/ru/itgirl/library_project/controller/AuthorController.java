@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/author")
+@RequestMapping("/authors")
 @Tag(name = "Authors", description = "Authors management")
 public class AuthorController {
 

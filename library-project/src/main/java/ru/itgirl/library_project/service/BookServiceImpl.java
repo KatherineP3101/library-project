@@ -57,10 +57,12 @@ public class BookServiceImpl implements BookService {
 
         book.setName(StringUtils.isNotEmpty(bookDto.getName()) ? bookDto.getName() : book.getName());
         if (StringUtils.isNotEmpty(bookDto.getGenre())) {
-            book.setGenre((Genre) genreRepository.findAll().stream()
-                    .map(genre -> Genre.builder()
-                            .name(bookDto.getGenre())
-                            .build()));
+            Genre genre = genreRepository.findByName(bookDto.getGenre())
+                    .orElseThrow(() -> {
+                        log.warn("Genre not found: {}", bookDto.getGenre());
+                        return new RuntimeException("Genre not found");
+                    });
+            book.setGenre(genre);
         }
 
         log.info("Book updated successfully");

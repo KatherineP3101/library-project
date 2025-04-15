@@ -5,9 +5,9 @@ import ru.itgirl.library_project.model.Author;
 
 public class AuthorSpecification {
 
-    public static Specification hasName(String name) {
+    public static Specification<Author> hasName(String name) {
         Specification<Author> specification = ((root, query, criteriaBuilder) -> {
-            return criteriaBuilder.equal(root.get(name), name);
+            return criteriaBuilder.equal(root.get("name"), name);
         });
 
         return specification;
@@ -15,7 +15,7 @@ public class AuthorSpecification {
 
     public static Specification hasSurname(String surname) {
         Specification<Author> specification = ((root, query, criteriaBuilder) -> {
-            return criteriaBuilder.equal(root.get(surname), surname);
+            return criteriaBuilder.equal(root.get("surname"), surname);
         });
 
         return specification;

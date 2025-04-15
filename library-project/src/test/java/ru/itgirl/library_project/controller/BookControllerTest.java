@@ -41,14 +41,13 @@ class BookControllerTest {
         List<AuthorDto> authors = new ArrayList<>();
         List<UserDto> users = new ArrayList<>();
         BookDto bookDto = new BookDto(1L, "Элантрис", "Роман", authors, users);
-        Mockito.when(bookService.createNewBook(any(BookDto.class))).thenReturn(bookDto);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/books")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(bookDto))
-                        .with(httpBasic("admin@email.com", "11111")))
+                        .with(httpBasic("admin@gmail.com", "11111")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("Элантрис"));
+                .andExpect(jsonPath("$.name").value("Элантрис"));
     }
 
     @SneakyThrows
@@ -56,15 +55,15 @@ class BookControllerTest {
     void updateBook() {
         List<AuthorDto> authors = new ArrayList<>();
         List<UserDto> users = new ArrayList<>();
-        BookDto bookDto = new BookDto(2L, "Ведьмак", "Фэнтези", authors, users);
+        BookDto bookDto = new BookDto(2L, "Ведьмак", "Роман", authors, users);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/books")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(bookDto))
                         .with(httpBasic("admin@email.com", "11111")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("Ведьмак"))
-                .andExpect(jsonPath("$.genre").value("Фэнтези"));
+                .andExpect(jsonPath("$.name").value("Ведьмак"))
+                .andExpect(jsonPath("$.genre").value("Роман"));
     }
 
     @SneakyThrows
@@ -73,7 +72,7 @@ class BookControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/books/1")
                         .with(httpBasic("admin@email.com", "11111")))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Book deleted successfully"));
+                .andExpect(content().string("Book with id 1 has been deleted."));
     }
 
     @SneakyThrows

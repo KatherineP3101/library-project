@@ -51,20 +51,24 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book updateBook(BookDto bookDto) {
+    public BookDto updateBook(BookDto bookDto) {
         log.info("Updating book: {}", bookDto.getName());
         Book book = bookRepository.getReferenceById(bookDto.getId());
 
         book.setName(StringUtils.isNotEmpty(bookDto.getName()) ? bookDto.getName() : book.getName());
         if (StringUtils.isNotEmpty(bookDto.getGenre())) {
-            book.setGenre((Genre) genreRepository.findAll().stream()
-                    .map(genre -> Genre.builder()
-                            .name(bookDto.getGenre())
-                            .build()));
+            Genre genre = genreRepository.findByName(bookDto.getGenre())
+                    .orElseThrow(() -> {
+                        log.warn("Genre not found: {}", bookDto.getGenre());
+                        return new RuntimeException("Genre not found");
+                    });
+            book.setGenre(genre);
         }
 
         log.info("Book updated successfully");
-        return bookRepository.save(book);
+        bookRepository.save(book);
+
+        return convertToDto(book);
     }
 
     @Override
@@ -74,10 +78,10 @@ public class BookServiceImpl implements BookService {
         try {
             bookRepository.delete(book);
             log.info("Book with ID {} has been successfully deleted.", id);
-            return "Book with id " + id + "has been deleted.";
+            return "Book with id " + id + " has been deleted.";
         } catch (Exception e) {
             log.error("Couldn't delete book with ID: {}", id, e);
-            return "Book with id " + id + "couldn't be deleted.";
+            return "Book with id " + id + " couldn't be deleted.";
         }
     }
 

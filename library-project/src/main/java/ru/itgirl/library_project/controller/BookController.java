@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/books")
 @Tag(name = "Books", description = "Books management")

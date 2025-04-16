@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF8">
-  <link href="/style.css" rel="stylesheet">
+  <link href="/styles.css" rel="stylesheet">
+  <title>BOOKS PAGE</title>
 </head>
 <body>
 <div class="container">
@@ -13,7 +14,6 @@
         <tr>
           <th scope="col">Id</th>
           <th scope="col">Title</th>
-          <th scope="col">Author</th>
           <th scope="col">Genre</th>
         </tr>
       </thead>
@@ -22,11 +22,10 @@
         <tr>
           <td><span>${book.id}</span></td>
           <td><span>${book.name}</span></td>
-          <td><span>${book.author}</span></td>
           <td><span>${book.genre}</span></td>
         </tr>
-      </tbody>
       </#list>
+      </tbody>
     </table>
   </div>
 </div>

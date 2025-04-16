@@ -4,6 +4,8 @@ import io.micrometer.common.util.StringUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.itgirl.library_project.dto.AuthorDto;
@@ -12,7 +14,7 @@ import ru.itgirl.library_project.service.AuthorService;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/authors")
 @Tag(name = "Authors", description = "Authors management")
@@ -30,28 +32,28 @@ public class AuthorController {
             return authorService.getAuthorByNameOrSurname(name, surname).toString();
         } else {
             List<AuthorDto> authors = authorService.getAllAuthors();
-            model.addAttribute("Authors", authors);
+            model.addAttribute("authors", authors);
             return "authorsTable";
         }
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get author by id", description = "This method allows to get the author by the id provided.")
-    AuthorDto getAuthorById(@PathVariable("id") Long id) {
-        return authorService.getAuthorById(id);
+    ResponseEntity<AuthorDto> getAuthorById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok().body(authorService.getAuthorById(id));
     }
 
     @GetMapping("/name")
     @Operation(summary = "Get author by name", description = "This method allows to get all authors with the name provided.")
-    AuthorDto getAuthorByName(@RequestParam("name") String name) {
-        return authorService.getAuthorByNameV1(name);
+    ResponseEntity<AuthorDto> getAuthorByName(@RequestParam("name") String name) {
+        return ResponseEntity.ok().body(authorService.getAuthorByNameV1(name));
     }
 
     @GetMapping("/name/sql")
     @Operation(summary = "Get author by name (as SQL)", description = "This method allows to get all authors with " +
             "the name provided, by creating an SQL query.")
-    AuthorDto getAuthorByNameSql(@RequestParam("name") String name) {
-        return authorService.getAuthorByNameV2(name);
+    ResponseEntity<AuthorDto> getAuthorByNameSql(@RequestParam("name") String name) {
+        return ResponseEntity.ok().body(authorService.getAuthorByNameV2(name));
     }
 
     @GetMapping("/name/spec")

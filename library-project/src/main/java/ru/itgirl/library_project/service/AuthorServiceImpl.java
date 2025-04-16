@@ -12,6 +12,7 @@ import ru.itgirl.library_project.model.Author;
 import ru.itgirl.library_project.repository.AuthorRepository;
 import ru.itgirl.library_project.specifications.AuthorSpecification;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,7 +57,7 @@ public class AuthorServiceImpl implements AuthorService {
     public List<AuthorDto> getAuthorByNameOrSurname(String name, String surname) {
         log.info("Fetching author(s) by name: {} or surname: {}", name, surname);
 
-        Specification specification = Specification.where(null);
+        Specification<Author> specification = Specification.where(null);
         if (StringUtils.isNotEmpty(name)) {
             specification = specification.and(AuthorSpecification.hasName(name));
         }
@@ -64,8 +65,16 @@ public class AuthorServiceImpl implements AuthorService {
             specification = specification.and(AuthorSpecification.hasSurname(surname));
         }
 
+        List<Author> authorList = authorRepository.findAll(specification);
+        List<AuthorDto> authorDtoList = new ArrayList<>();
+
+        for (Author author : authorList) {
+            AuthorDto authorDto = convertToDto(author);
+            authorDtoList.add(authorDto);
+        }
+
         log.info("Found authors matching criteria");
-        return authorRepository.findAll(specification);
+        return authorDtoList;
     }
 
     @Override

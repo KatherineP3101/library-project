@@ -13,7 +13,7 @@ public class AuthorSpecification {
         return specification;
     }
 
-    public static Specification hasSurname(String surname) {
+    public static Specification<Author> hasSurname(String surname) {
         Specification<Author> specification = ((root, query, criteriaBuilder) -> {
             return criteriaBuilder.equal(root.get("surname"), surname);
         });

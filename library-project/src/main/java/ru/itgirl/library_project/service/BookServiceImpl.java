@@ -51,7 +51,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book updateBook(BookDto bookDto) {
+    public BookDto updateBook(BookDto bookDto) {
         log.info("Updating book: {}", bookDto.getName());
         Book book = bookRepository.getReferenceById(bookDto.getId());
 
@@ -66,7 +66,9 @@ public class BookServiceImpl implements BookService {
         }
 
         log.info("Book updated successfully");
-        return bookRepository.save(book);
+        bookRepository.save(book);
+
+        return convertToDto(book);
     }
 
     @Override
@@ -76,10 +78,10 @@ public class BookServiceImpl implements BookService {
         try {
             bookRepository.delete(book);
             log.info("Book with ID {} has been successfully deleted.", id);
-            return "Book with id " + id + "has been deleted.";
+            return "Book with id " + id + " has been deleted.";
         } catch (Exception e) {
             log.error("Couldn't delete book with ID: {}", id, e);
-            return "Book with id " + id + "couldn't be deleted.";
+            return "Book with id " + id + " couldn't be deleted.";
         }
     }
 

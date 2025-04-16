@@ -98,7 +98,7 @@ class BookServiceImplTest {
         Mockito.when(bookRepository.getReferenceById(1L)).thenReturn(book);
         Mockito.when(bookRepository.save(Mockito.any(Book.class))).thenReturn(book);
 
-        Book result = bookServiceImpl.updateBook(bookDto);
+        BookDto result = bookServiceImpl.updateBook(bookDto);
 
         assertNotNull(result);
         assertEquals("Академия", result.getName());

@@ -1,5 +1,6 @@
 package ru.itgirl.library_project.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -35,9 +36,8 @@ class BookControllerTest {
 
     private BookService bookService;
 
-    @SneakyThrows
     @Test
-    void createNewBook() {
+    void createNewBook() throws Exception {
         List<AuthorDto> authors = new ArrayList<>();
         List<UserDto> users = new ArrayList<>();
         BookDto bookDto = new BookDto(1L, "Элантрис", "Роман", authors, users);
@@ -45,17 +45,16 @@ class BookControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/books")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(bookDto))
-                        .with(httpBasic("admin@gmail.com", "11111")))
+                        .with(httpBasic("admin@email.com", "11111")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Элантрис"));
     }
 
-    @SneakyThrows
     @Test
-    void updateBook() {
+    void updateBook() throws Exception {
         List<AuthorDto> authors = new ArrayList<>();
         List<UserDto> users = new ArrayList<>();
-        BookDto bookDto = new BookDto(2L, "Ведьмак", "Роман", authors, users);
+        BookDto bookDto = new BookDto(1L, "Ведьмак", "Роман", authors, users);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/books")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -66,18 +65,16 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.genre").value("Роман"));
     }
 
-    @SneakyThrows
     @Test
-    void deleteBook() {
+    void deleteBook() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/books/1")
                         .with(httpBasic("admin@email.com", "11111")))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Book with id 1 has been deleted."));
     }
 
-    @SneakyThrows
     @Test
-    void getAllBooksView() {
+    void getAllBooksView() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/books")
                         .with(httpBasic("admin@email.com", "11111")))
                 .andExpect(status().isOk())

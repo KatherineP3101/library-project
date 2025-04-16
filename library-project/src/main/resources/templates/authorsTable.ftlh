@@ -8,7 +8,7 @@
 <body>
 <div class="container">
   <div class="table-responsive">
-    <h1>BOOKS</h1>
+    <h1>AUTHORS</h1>
     <table class="table table-striped">
       <thead>
         <tr>

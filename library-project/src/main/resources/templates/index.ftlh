@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF8">
   <link href="/styles.css" rel="stylesheet">
-  <title>BOOKS LIST</title>
+  <title>BOOKS PAGE</title>
 </head>
 <body>
 <div class="container">

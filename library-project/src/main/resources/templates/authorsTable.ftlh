@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF8">
-  <link href="/style.css" rel="stylesheet">
-  <title>AUTHORS LIST</title>
+  <link href="/styles.css" rel="stylesheet">
+  <title>AUTHORS PAGE</title>
 </head>
 <body>
 <div class="container">
